@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${employees.empNo == null} ? '사원 등록' : '사원 수정'">사원 등록/수정</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { color: #333; }
+        .form-container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="date"], input[type="number"] { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; }
+        .btn-submit { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-cancel { background-color: #6c757d; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; margin-left: 10px; }
+        .field-error { color: red; font-size: 0.9em; margin-top: 5px; }
+    </style>
+</head>
+<body>
+<h2 th:text="${employees.empNo == null} ? '🆕 사원 등록' : '✏️ 사원 정보 수정'">사원 등록/수정</h2>
+
+<div class="form-container">
+    <form th:object="${employees}" th:action="@{/employees}" method="post">
+
+        <div th:if="${employees.empNo != null}" class="form-group">
+            <label for="EmpNo">사번 (EmpNo)</label>
+            <input type="text" id="EmpNo" th:field="*{empNo}" readonly>
+        </div>
+        <input th:if="${employees.empNo != null}" type="hidden" th:field="*{empNo}">
+
+        <div class="form-group">
+            <label for="EmpName">이름 (EmpName)</label>
+            <input type="text" id="EmpName" th:field="*{empName}" placeholder="이름 (필수, 2자 이상 50자 이하)">
+            <p th:if="${#fields.hasErrors('EmpName')}" th:errors="*{empName}" class="field-error">이름 오류 메시지</p>
+        </div>
+
+        <div class="form-group">
+            <label for="Dept">부서 (Dept)</label>
+            <input type="text" id="Dept" th:field="*{dept}" placeholder="부서명 (필수)">
+            <p th:if="${#fields.hasErrors('Dept')}" th:errors="*{dept}" class="field-error">부서 오류 메시지</p>
+        </div>
+
+        <div class="form-group">
+            <label for="HireDate">입사일 (HireDate)</label>
+            <input type="date" id="HireDate" th:field="*{hireDate}">
+            <p th:if="${#fields.hasErrors('HireDate')}" th:errors="*{hireDate}" class="field-error">입사일 오류 메시지</p>
+        </div>
+
+        <div class="form-group">
+            <label for="Salary">급여 (Salary)</label>
+            <input type="number" id="Salary" th:field="*{salary}" placeholder="급여 (필수, 2,000,000원 이상)">
+            <p th:if="${#fields.hasErrors('Salary')}" th:errors="*{salary}" class="field-error">급여 오류 메시지</p>
+        </div>
+
+        <hr>
+
+        <div>
+            <button type="submit" class="btn-submit" th:text="${employees.empNo == null} ? '등록' : '수정 완료'">등록/수정 완료</button>
+            <a th:href="@{/employees}" class="btn-cancel">취소 (목록으로)</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사원 목록</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .action-links a { margin-right: 10px; text-decoration: none; color: #0066cc; }
+        .action-links button { color: white; background-color: #dc3545; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+        .message-success { color: green; font-weight: bold; margin-bottom: 15px; }
+        .message-error { color: red; font-weight: bold; margin-bottom: 15px; }
+        .add-btn { background-color: #28a745; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+<h2>👩‍💼 사원 관리 목록</h2>
+
+<div th:if="${success}" class="message-success" th:text="${success}">성공 메시지</div>
+<div th:if="${error}" class="message-error" th:text="${error}">오류 메시지</div>
+
+<a th:href="@{/employees/new}" class="add-btn">➕ 사원 등록</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>사번 (EmpNo)</th>
+        <th>이름 (EmpName)</th>
+        <th>부서 (Dept)</th>
+        <th>입사일 (HireDate)</th>
+        <th>급여 (Salary)</th>
+        <th>관리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="employee : ${employees}">
+        <td th:text="${employee.empNo}">1</td>
+        <td th:text="${employee.empName}">홍길동</td>
+        <td th:text="${employee.dept}">개발부</td>
+        <td th:text="${employee.hireDate}">2020-01-01</td>
+        <td th:text="${#numbers.formatInteger(employee.salary, 0, 'COMMA') + '원'}">3,000,000원</td>
+        <td class="action-links">
+            <a th:href="@{|/employees/${employee.empNo}/edit|}">수정</a>
+
+            <form th:action="@{|/employees/${employee.empNo}/delete|}" method="post" style="display: inline;"
+                  onsubmit="return confirm('정말로 ' + [[$,{employee:empName}]] + ' 사원의 정보를 삭제하시겠습니까?');">
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${#lists.isEmpty(employees)}" style="margin-top: 20px; color: #666;">
+    등록된 사원 정보가 없습니다.
+</div>
+</body>
+</html>
